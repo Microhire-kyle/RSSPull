@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Microhire News Feed</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 1em; background: #fff; color: #333; }
+    h2 { margin-bottom: 0.5em; }
+    ul { list-style-type: none; padding: 0; }
+    li { margin-bottom: 1em; }
+    a { color: #0078d4; text-decoration: none; font-weight: bold; }
+    small { display: block; color: #777; }
+  </style>
+</head>
+<body>
+  <h2>📰 Microhire News</h2>
+  <ul id="rss-feed"></ul>
+
+  <script>
+    const feedUrl = encodeURIComponent("https://www.google.com/alerts/feeds/02277462249065039328/9364842793213841417");
+
+    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${feedUrl}`)
+      .then(res => res.json())
+      .then(data => {
+        const container = document.getElementById("rss-feed");
+        let html = "";
+        data.items.slice(0, 5).forEach(item => {
+          html += `<li>
+                    <a href="${item.link}" target="_blank">${item.title}</a>
+                    <small>${new Date(item.pubDate).toLocaleDateString()}</small>
+                   </li>`;
+        });
+        container.innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById("rss-feed").innerHTML = "Unable to load feed.";
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
